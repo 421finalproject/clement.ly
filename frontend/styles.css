@@ -30,28 +30,45 @@ body {
     --blue: #ACC7DE;
 }
 
+/* Texts */
 h1 {
     font-family: "Supermercado One", sans-serif;
-    padding: 20px;
+    padding: 2%;
     text-align: center;
 }
 
 p {
   font-family: "Sofia Sans", sans-serif;
-  padding: 20px;
   text-align: center;
 }
 
+/* Images */
 img {
     height: auto;
     transition: transform 0.2s ease-in-out;
 }
 
-img:hover {
-    animation: bounce 0.5s;
-    animation-timing-function: ease-in-out;
+.fruit {
+    width: 10vw;
+    transition: transform 0.3s ease-in-out;
 }
 
+.fruit:hover {
+    animation: bounce 0.5s ease-in-out;
+}
+
+.shadow {
+    width: 8vw;
+    padding: 10px;
+    transform-origin: center center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.fruit:hover + .shadow {
+    animation: shrinkShadow 0.5s ease-in-out;
+}
+
+/* Animations */
 @keyframes bounce {
     0%, 100% {
         transform: translateY(0);
@@ -61,12 +78,11 @@ img:hover {
     }
 }
 
-.fruit {
-    width: 10%;
-}
-
-.shadow {
-    width: 10%;
-    padding: 10px;
-    animation: none;
+@keyframes shrinkShadow {
+    0%, 100% {
+        transform: scale(1); /* Normal size when fruit is on the ground */
+    }
+    50% {
+        transform: scale(0.7); /* Smaller shadow when fruit is higher */
+    }
 }
