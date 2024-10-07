@@ -1,0 +1,72 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Supermercado+One&display=swap');
+
+/* General */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    background-color: var(--blue);
+    color: var(--brown);
+    height: 100vh;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Colors */
+:root {
+    --white: #FDFCF8;
+    --cream: #EEE8DA;
+    --brown: #312926;
+    --dark-orange: #DF5A16;
+    --light-orange: #E7A23A;
+    --green: #91B287;
+    --blue: #ACC7DE;
+}
+
+h1 {
+    font-family: "Supermercado One", sans-serif;
+    padding: 20px;
+    text-align: center;
+}
+
+p {
+  font-family: "Sofia Sans", sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+img {
+    height: auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+img:hover {
+    animation: bounce 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.fruit {
+    width: 10%;
+}
+
+.shadow {
+    width: 10%;
+    padding: 10px;
+    animation: none;
+}
