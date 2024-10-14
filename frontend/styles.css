@@ -10,6 +10,7 @@
 
 /* Body */
 body {
+    font-family: "Sofia Sans", sans-serif;
     background-color: var(--blue);
     color: var(--brown);
     height: 100vh;
@@ -85,4 +86,63 @@ img {
     50% {
         transform: scale(0.7); /* Smaller shadow when fruit is higher */
     }
+}
+
+.signup-container {
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: 10px;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 300px;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-field label {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.input-field input {
+    padding: 10px;
+    border: 2px solid var(--brown);
+    border-radius: 15px;
+    font-size: 1rem;
+}
+
+button {
+    font-family: "Sofia Sans", sans-serif;
+    background-color: var(--cream);
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: var(--dark-orange);
+    color: var(--white);
+}
+
+.signup-form p {
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.signup-form p a {
+    color: var(--brown);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-form p a:hover {
+    text-decoration: underline;
 }
