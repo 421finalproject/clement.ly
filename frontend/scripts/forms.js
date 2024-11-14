@@ -1,5 +1,5 @@
 document.getElementById('signup-form')?.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
 
     const username = document.getElementById('signup-username').value;
     const password = document.getElementById('signup-password').value;
@@ -16,7 +16,7 @@ document.getElementById('signup-form')?.addEventListener('submit', async (event)
         const data = await response.json();
         if (response.ok) {
             alert('User created successfully!');
-            window.location.href = 'log-in.html'; // Redirect to login page
+            window.location.href = 'log-in.html';
         } else {
             alert('Error: ' + data.message);
         }
@@ -27,7 +27,7 @@ document.getElementById('signup-form')?.addEventListener('submit', async (event)
 });
 
 document.getElementById('login-form')?.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
 
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
@@ -42,9 +42,9 @@ document.getElementById('login-form')?.addEventListener('submit', async (event) 
         });
 
         const data = await response.json();
-        if (data.length > 0) { // Assuming a successful login returns user data
+        if (data.length > 0) {
             alert('Login successful!');
-            window.location.href = 'home.html'; // Redirect to home page
+            window.location.href = 'home.html';
         } else {
             alert('Invalid username or password.');
         }
