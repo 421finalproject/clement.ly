@@ -16,7 +16,7 @@ body {
     height: 100vh;
     display: flex;
     justify-content: center; 
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
     overflow-x: hidden;
 }
@@ -56,16 +56,6 @@ img {
     transition: transform 0.2s ease-in-out;
 }
 
-.fruit {
-    width: 10vw;
-    transition: transform 0.3s ease-in-out;
-    max-width: 100px;
-}
-
-.fruit:hover {
-    animation: bounce 0.5s ease-in-out;
-}
-
 .shadow {
     width: 8vw;
     padding: 10px;
@@ -84,11 +74,51 @@ img {
     }
 }
 
+/* Welcome Stuff */
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.welcome-container h1 {
+    font-family: "Supermercado One", sans-serif;
+    font-size: var(--font-xlarge);
+    color: var(--brown);
+    margin-bottom: 20px;
+}
+
+.fruity {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.fruit {
+    width: 10vw;
+    transition: transform 0.3s ease-in-out;
+    max-width: 100px;
+}
+
+.fruit:hover {
+    animation: bounce 0.5s ease-in-out;
+}
+
 /* Sign Up Stuff */
 .signup-container {
     background-color: var(--white);
     padding: 40px;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
 }
 
 .signup-form {

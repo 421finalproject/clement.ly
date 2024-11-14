@@ -9,19 +9,20 @@
 </head>
 <body>
     <div class="signup-container">
-        <form class="signup-form">
+        <form class="signup-form" id="login-form" method="POST">
             <h1>Log in</h1>
             <div class="input-field">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="login-username" name="username" required>
             </div>
             <div class="input-field">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="login-password" name="password" required>
             </div>
             <button type="submit">Start tasking</button>
-            <p>Already have an account? <a href="sign-in.html">Sign up</a></p>
+            <p>Don't have an account? <a href="sign-in.html">Sign up</a></p>
         </form>
+        <script src="scripts/forms.js"></script>
     </div>
 </body>
 </html>
