@@ -16,8 +16,9 @@ body {
     height: 100vh;
     display: flex;
     justify-content: center; 
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 /* Colors */
@@ -29,6 +30,10 @@ body {
     --light-orange: #E7A23A;
     --green: #91B287;
     --blue: #ACC7DE;
+    --font-small: 0.8rem;
+    --font-medium: 1rem;
+    --font-large: 1.5rem;
+    --font-xlarge: 2rem;
 }
 
 /* Texts */
@@ -36,11 +41,13 @@ h1 {
     font-family: "Supermercado One", sans-serif;
     padding: 2%;
     text-align: center;
+    font-size: var(--font-xlarge);
 }
 
 p {
   font-family: "Sofia Sans", sans-serif;
   text-align: center;
+  font-size: var(--font-medium);
 }
 
 /* Images */
@@ -52,6 +59,7 @@ img {
 .fruit {
     width: 10vw;
     transition: transform 0.3s ease-in-out;
+    max-width: 100px;
 }
 
 .fruit:hover {
@@ -63,10 +71,7 @@ img {
     padding: 10px;
     transform-origin: center center;
     transition: transform 0.3s ease-in-out;
-}
-
-.fruit:hover + .shadow {
-    animation: shrinkShadow 0.5s ease-in-out;
+    max-width: 80px;
 }
 
 /* Animations */
@@ -76,15 +81,6 @@ img {
     }
     50% {
         transform: translateY(-20px);
-    }
-}
-
-@keyframes shrinkShadow {
-    0%, 100% {
-        transform: scale(1); /* Normal size when fruit is on the ground */
-    }
-    50% {
-        transform: scale(0.7); /* Smaller shadow when fruit is higher */
     }
 }
 
@@ -119,20 +115,6 @@ img {
     font-size: 1rem;
 }
 
-button {
-    font-family: "Sofia Sans", sans-serif;
-    background-color: var(--cream);
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    font-size: 1rem;
-}
-
-button:hover {
-    background-color: var(--dark-orange);
-    color: var(--white);
-}
-
 .signup-form p {
     text-align: center;
     font-size: 0.9rem;
@@ -152,59 +134,127 @@ button:hover {
 .calendar {
     display: flex;
     flex-direction: column;
+    align-items: center;
     background-color: var(--cream);
     border-radius: 10px;
     padding: 20px;
-    width: 80%;
+    width: 90%;
     max-width: 1200px;
+    margin: 20px auto;
+    box-sizing: border-box;
+    overflow: visible;
 }
 
-/* Calendar Header */
 .calendar-header {
-    display: flex;
-    margin-bottom: 20px;
+    width: 100%;
     background-color: var(--dark-orange);
+    color: var(--white);
+    text-align: center;
+    padding: 30px 0;
+    font-family: "Supermercado One", sans-serif;
+    font-size: var(--font-large);
     border-radius: 10px;
-    padding: 20px 50px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
-/* Calendar Body */
+.calendar-header h1 {
+    font-family: "Supermercado One", sans-serif;
+    color: var(--dark-orange);
+    margin-bottom: 20px;
+}
+
 .calendar-body {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    gap: 15px;
+    box-sizing: border-box;
 }
 
 /* Day Container */
 .day {
     background-color: var(--white);
     border-radius: 10px;
-    padding: 20px;
-    width: 13%;
+    padding: 10px;
+    width: 10%;
+    min-width: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    transition: transform 0.2s ease;
 }
 
 .day p {
-    margin-bottom: 100px;
-    font-size: 1rem;
+    font-size: var(--font-medium);
     text-align: center;
+    color: var(--brown);
+    margin-bottom: 10px;
 }
 
 /* Add Icon */
 .add-icon {
-    background-color: var(--light-orange);
-    color: white;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    font-size: 1.5rem;
+    background: none;
+    border: none;
     cursor: pointer;
+    border-radius: 50%;
+    padding: 10px;
+    transition: transform 0.3s ease;
+}
+
+.add-icon img {
+    width: 40px;
+    height: auto;
+    display: block;
 }
 
 .add-icon:hover {
-    background-color: var(--dark-orange);
+    transform: scale(1.1);
+}
+
+/* Responsive hopefully */
+@media (max-width: 768px) {
+    .calendar {
+        margin-top: 100px;
+        margin-bottom: 50px;
+    }
+
+    .calendar-body {
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .day {
+        width: 45%; /* Two columns on medium screens */
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar {
+        padding: 10px;
+        margin-top: 100px;
+        margin-bottom: 50px;
+    }
+
+    .calendar-header {
+        font-size: var(--font-medium);
+        padding: 15px 0;
+    }
+
+    .day {
+        width: 100%; /* One column on very narrow screens */
+        padding: 15px;
+    }
+
+    .day p {
+        font-size: var(--font-small);
+    }
+
+    .add-icon img {
+        width: 30px;
+    }
 }
