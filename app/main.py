@@ -92,9 +92,17 @@ async def create_tables():
     cnx = get_db_connection()
 
     cursor = cnx.cursor()
-    cursor.execute(user_table)
-    cursor.execute(task_type_table)
-    cursor.execute(task_table)
+    with open("./sql/create_tables.sql", "r") as f:
+        a = f.readlines()
+        cursor.execute(a)
+
+    with open("./sql/create_procedures.sql", "r") as f:
+        a = f.readlines()
+        cursor.execute(a)
+        
+    # cursor.execute(user_table)
+    # cursor.execute(task_type_table)
+    # cursor.execute(task_table)
     cnx.commit()
     ret = cursor.fetchall()
 
