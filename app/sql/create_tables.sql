@@ -3,14 +3,14 @@ CREATE TABLE Users(
 	uname VARCHAR(200) UNIQUE,
 	password TEXT
 );
-
+~
 CREATE TABLE Task_types(
 	ttid INT PRIMARY KEY AUTO_INCREMENT,
 	uid INT,
 	name TEXT,
 	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE 
 );
-
+~
 CREATE TABLE Tasks(
     tid INT PRIMARY KEY AUTO_INCREMENT,
  	uid INT,
@@ -22,5 +22,3 @@ CREATE TABLE Tasks(
 	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE,
 	FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
 );
-
-commit;
