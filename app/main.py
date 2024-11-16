@@ -45,36 +45,6 @@ def get_db_connection():
 
     return cnx
 
-user_table = """
-CREATE TABLE Users(
-	uid INT PRIMARY KEY AUTO_INCREMENT,
-	uname VARCHAR(200) UNIQUE,
-	password TEXT
-);
-"""
-
-task_type_table = """
-CREATE TABLE Task_types(
-	ttid INT PRIMARY KEY AUTO_INCREMENT,
-	uid INT,
-	name TEXT,
-	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE 
-)
-"""
-
-task_table = """
-CREATE TABLE Tasks(
-    tid INT PRIMARY KEY AUTO_INCREMENT,
- 	uid INT,
-	task_name TEXT,
-	task_type INT,
-	status INT,
-	start DATETIME,
-	end DATETIME,
-	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE,
-	FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
-)
-"""
 
 @app.get("/show_tables")
 async def show_tables():
@@ -92,17 +62,20 @@ async def create_tables():
     cnx = get_db_connection()
 
     cursor = cnx.cursor()
-    with open("./sql/create_tables.sql", "r") as f:
-        a = f.readlines()
-        cursor.execute(a)
+    with open("/code/app/sql/create_tables.sql", "r") as f:
+        sqls = ("".join(f.readlines())).split("~")
+        for sql in sqls:
+            print(sql)
+            cursor.execute(sql)
 
-    with open("./sql/create_procedures.sql", "r") as f:
-        a = f.readlines()
-        cursor.execute(a)
-        
-    # cursor.execute(user_table)
-    # cursor.execute(task_type_table)
-    # cursor.execute(task_table)
+    cnx.commit()
+
+    with open("/code/app/sql/create_procedures.sql", "r") as f:
+        sqls = ("".join(f.readlines())).split("~")
+        for sql in sqls:
+            print(sql)
+            cursor.execute(sql)
+
     cnx.commit()
     ret = cursor.fetchall()
 
@@ -114,9 +87,16 @@ async def delete_tables():
     cnx = get_db_connection()
 
     cursor = cnx.cursor()
-    cursor.execute("DROP TABLE Tasks")
-    cursor.execute("DROP TABLE Task_types")
-    cursor.execute("DROP TABLE Users")
+    cursor.execute("DROP TABLE IF EXISTS Tasks")
+    cursor.execute("DROP TABLE IF EXISTS Task_types")
+    cursor.execute("DROP TABLE IF EXISTS Users")
+    cnx.commit()
+    cursor.execute("DROP PROCEDURE IF EXISTS CreateUser")
+    cursor.execute("DROP PROCEDURE IF EXISTS AuthenticateUser")
+    cursor.execute("DROP PROCEDURE IF EXISTS CreateTaskTypeByUser")
+    cursor.execute("DROP PROCEDURE IF EXISTS GetTaskTypesByUser")
+    cursor.execute("DROP PROCEDURE IF EXISTS CreateTaskByUser")
+    cursor.execute("DROP PROCEDURE IF EXISTS GetTasksByUser")
     cnx.commit()
     ret = cursor.fetchall()
 
