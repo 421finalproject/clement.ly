@@ -19,10 +19,10 @@ document.getElementById('signup-form')?.addEventListener('submit', async (event)
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: {
+            body: JSON.stringify({
                 "username": form_data.username,
                 "password": form_data.password
-            }
+            })
         });
 
         if (response.ok) {

@@ -5,7 +5,7 @@ import hashlib
 import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Body
-from typing import Annotated
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
@@ -116,8 +116,15 @@ async def delete_tables():
 create_user_sql = """
 INSERT INTO Users(uname, password) VALUES (%s, %s)
 """
+
+class LoginParams(BaseModel):
+    username: str
+    password: str
+
 @app.post("/create_user")
-async def create_user(username: Annotated[str, Body()], password: Annotated[str, Body()]):
+async def create_user(username: str = Body(), password: str = Body()):
+    # body = await request.json()
+
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     cnx = get_db_connection()
@@ -135,7 +142,7 @@ auth_user_sql = """
 SELECT * FROM Users U WHERE U.uname = %s AND U.password = %s
 """
 @app.post("/auth_user")
-async def create_user(username = Body(), password = Body()) -> bool:
+async def auth_user(username: str = Body(), password: str = Body()) -> bool:
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     cnx = get_db_connection()
@@ -166,7 +173,7 @@ INSERT INTO Task_types(uid, name) VALUES (%s, %s)
 """
 
 @app.post("/create_task_type_by_user")
-async def create_task_type_by_user(uid = Body(), name = Body()):
+async def create_task_type_by_user(uid: int = Body(), name: str = Body()):
     cnx = get_db_connection()
 
     try:
@@ -208,7 +215,7 @@ FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
 '''
 
 @app.post("/create_task_by_user")
-async def create_task_by_user(uid: int, task_name: str, task_type: int, status: int, day_of_week: int):
+async def create_task_by_user(uid: int = Body(), task_name: str = Body(), task_type: int = Body(), status: int = Body(), day_of_week: int = Body()):
     cnx = get_db_connection()
     try:
         cursor = cnx.cursor()
