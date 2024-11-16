@@ -8,21 +8,13 @@ document.getElementById('signup-form')?.addEventListener('submit', async (event)
         password: document.getElementById('signup-password').value.trim(),
     };
 
-    const params = new URLSearchParams({
-        username: form_data.username,
-        password: form_data.password,
-    }).toString()
-
     try {
         const response = await fetch('http://0.0.0.0:8000/create_user', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                "username": form_data.username,
-                "password": form_data.password
-            })
+            body: JSON.stringify(form_data)
         });
 
         if (response.ok) {
@@ -48,18 +40,13 @@ document.getElementById('login-form')?.addEventListener('submit', async (event) 
         password: document.getElementById('login-password').value.trim(),
     };
 
-    const params = new URLSearchParams({
-        username: form_data.username,
-        password: form_data.password,
-    }).toString()
-
     try {
         const response = await fetch('0.0.0.0:8000/auth_user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(form_data),
+            body: JSON.stringify(form_data)
         });
 
         const data = await response.json();
