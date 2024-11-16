@@ -4,6 +4,8 @@ import os
 import hashlib
 import datetime
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Body
+from typing import Annotated
 
 app = FastAPI()
 
@@ -116,7 +118,7 @@ create_user_sql = """
 INSERT INTO Users(uname, password) VALUES (%s, %s)
 """
 @app.post("/create_user")
-async def create_user(username: str, password: str):
+async def create_user(username: Annotated[str, Body()], password: Annotated[str, Body()]):
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     cnx = get_db_connection()
@@ -134,7 +136,7 @@ auth_user_sql = """
 SELECT * FROM Users U WHERE U.uname = %s AND U.password = %s
 """
 @app.post("/auth_user")
-async def create_user(username: str, password: str) -> bool:
+async def create_user(username = Body(), password = Body()) -> bool:
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     cnx = get_db_connection()
@@ -165,7 +167,7 @@ INSERT INTO Task_types(uid, name) VALUES (%s, %s)
 """
 
 @app.post("/create_task_type_by_user")
-async def create_task_type_by_user(uid: int, name:str):
+async def create_task_type_by_user(uid = Body(), name = Body()):
     cnx = get_db_connection()
 
     try:

@@ -14,11 +14,15 @@ document.getElementById('signup-form')?.addEventListener('submit', async (event)
     }).toString()
 
     try {
-        const response = await fetch('http://0.0.0.0:8000/create_user?' + params, {
+        const response = await fetch('http://0.0.0.0:8000/create_user', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: {
+                "username": form_data.username,
+                "password": form_data.password
+            }
         });
 
         if (response.ok) {
