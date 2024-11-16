@@ -8,18 +8,26 @@ document.getElementById('signup-form')?.addEventListener('submit', async (event)
         password: document.getElementById('signup-password').value.trim(),
     };
 
+    const params = new URLSearchParams({
+        username: form_data.username,
+        password: form_data.password,
+    }).toString()
+
     try {
-        const response = await fetch('/create_user', {
-            method: 'POST',
+        const response = await fetch('http://0.0.0.0:8000/create_user', {
+            method: 'post',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(form_data),
+            body: JSON.stringify({
+                "username": form_data.username,
+                "password": form_data.password
+            })
         });
 
         if (response.ok) {
-            alert('Sign-up successful! Please log-in now.');
-            window.location.href = 'log-in.html'; // redirect to login page
+            alert('Sign-up successful!');
+            window.location.href = 'home.html'; // redirect to login page
         } else {
             const error_data = await response.json();
             alert('Error: ' + (error_data.message || 'Failed to sign up'));
@@ -40,8 +48,13 @@ document.getElementById('login-form')?.addEventListener('submit', async (event) 
         password: document.getElementById('login-password').value.trim(),
     };
 
+    const params = new URLSearchParams({
+        username: form_data.username,
+        password: form_data.password,
+    }).toString()
+
     try {
-        const response = await fetch('/auth_user', {
+        const response = await fetch('0.0.0.0:8000/auth_user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,11 +75,11 @@ document.getElementById('login-form')?.addEventListener('submit', async (event) 
     }
 });
 
-// add task (POST)
+// add task (POST) (/create_task_by_user)
 document.getElementById('add-task-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // collecting data
+    // collecting data (/create_task_by_use)
     const form_data = {
         task_name: document.getElementById('task-name').value,
         task_type: document.getElementById('task-type').value,
@@ -76,7 +89,7 @@ document.getElementById('add-task-form')?.addEventListener('submit', async (even
 
     try {
         // send POST request to create task
-        const response = await fetch('/create_task_by_user', {
+        const response = await fetch('0.0.0.0:8000/create_task_by_user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,6 +100,7 @@ document.getElementById('add-task-form')?.addEventListener('submit', async (even
         if (response.ok) {
             alert('Task created successfully!');
             window.location.href = 'home.html'; // redirect to home page
+            window.location.reload();  // reload page
         } else {
             const error_data = await response.json();
             alert('Error: ' + (error_data.message || 'Failed to create task'));
@@ -97,7 +111,7 @@ document.getElementById('add-task-form')?.addEventListener('submit', async (even
     }
 });
 
-// update task (PUT)
+// update task (PUT) (/update_task_by_user)
 document.getElementById('update-task-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -111,7 +125,7 @@ document.getElementById('update-task-form')?.addEventListener('submit', async (e
 
     try {
         // send PUT request to update task
-        const response = await fetch('/update_task_by_user', {
+        const response = await fetch('0.0.0.0:8000/update_task_by_user', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -122,6 +136,7 @@ document.getElementById('update-task-form')?.addEventListener('submit', async (e
         if (response.ok) {
             alert('Task updated successfully!');
             window.location.href = 'home.html'; // redirect to home page
+            window.location.reload();  // reload page
         } else {
             const error_data = await response.json();
             alert('Error: ' + (error_data.message || 'Failed to update task'));

@@ -3,9 +3,21 @@ from mysql import connector
 import os
 import hashlib
 import datetime
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Body
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
@@ -56,8 +68,7 @@ CREATE TABLE Tasks(
 	task_name TEXT,
 	task_type INT,
 	status INT,
-	start DATETIME,
-	end DATETIME,
+	day_of_week INT CHECK(day_of_week >= 0 AND day_of_week <= 6),
 	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE,
 	FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
 )
@@ -105,8 +116,15 @@ async def delete_tables():
 create_user_sql = """
 INSERT INTO Users(uname, password) VALUES (%s, %s)
 """
+
+class LoginParams(BaseModel):
+    username: str
+    password: str
+
 @app.post("/create_user")
-async def create_user(username: str, password: str):
+async def create_user(username: str = Body(), password: str = Body()):
+    # body = await request.json()
+
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     cnx = get_db_connection()
@@ -124,7 +142,7 @@ auth_user_sql = """
 SELECT * FROM Users U WHERE U.uname = %s AND U.password = %s
 """
 @app.post("/auth_user")
-async def create_user(username: str, password: str) -> bool:
+async def auth_user(username: str = Body(), password: str = Body()) -> bool:
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     cnx = get_db_connection()
@@ -155,7 +173,7 @@ INSERT INTO Task_types(uid, name) VALUES (%s, %s)
 """
 
 @app.post("/create_task_type_by_user")
-async def create_task_type_by_user(uid: int, name:str):
+async def create_task_type_by_user(uid: int = Body(), name: str = Body()):
     cnx = get_db_connection()
 
     try:
@@ -181,32 +199,27 @@ async def get_task_type_by_user(uid: int):
 
     return ret
 
-"""
- 	uid INT,
-	task_name TEXT,
-	task_type INT,
-	status INT,
-	start DATETIME,
-	end DATETIME,
-	"""
-
-
 create_task_by_user_sql = """ 
-INSERT INTO Tasks(uid, task_name, task_type, status, start, end) VALUES (%s, %s, %s, %s, %s, %s)
+INSERT INTO Tasks(uid, task_name, task_type, status, day_of_week) VALUES (%s, %s, %s, %s, %s)
 """
+
+'''
+tid INT PRIMARY KEY AUTO_INCREMENT,
+uid INT,
+task_name TEXT,
+task_type INT,
+status INT,
+day_of_week INT CHECK(day_of_week >= 0 AND day_of_week <= 6),
+FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE,
+FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
+'''
 
 @app.post("/create_task_by_user")
-async def create_task_by_user(uid: int, task_name: str, task_type: int, status: int, start: str, end: str):
+async def create_task_by_user(uid: int = Body(), task_name: str = Body(), task_type: int = Body(), status: int = Body(), day_of_week: int = Body()):
     cnx = get_db_connection()
-
-    start_datetime = datetime.datetime.fromisoformat(start)
-    start_str = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    end_datetime = datetime.datetime.fromisoformat(end)
-    end_str = end_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
     try:
         cursor = cnx.cursor()
-        cursor.execute(create_task_by_user_sql, (uid, task_name, task_type, status, start_str, end_str))
+        cursor.execute(create_task_by_user_sql, (uid, task_name, task_type, status, day_of_week))
     except Exception as e:
         cnx.rollback()
         print(e.with_traceback())
@@ -216,7 +229,7 @@ async def create_task_by_user(uid: int, task_name: str, task_type: int, status: 
 
 
 get_tasks_by_user_sql = """ 
-SELECT T.task_name, Tt.name, T.status, T.start, T.end FROM 
+SELECT T.task_name, Tt.name, T.status, T.day_of_week FROM 
 Tasks T 
 LEFT JOIN
 Task_types Tt
