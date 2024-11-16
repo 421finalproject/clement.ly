@@ -69,7 +69,8 @@ CREATE TABLE Tasks(
 	task_name TEXT,
 	task_type INT,
 	status INT,
-	day_of_week INT CHECK(day_of_week >= 0 AND day_of_week <= 6),
+	start DATETIME,
+	end DATETIME,
 	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE,
 	FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
 )
@@ -117,53 +118,41 @@ async def delete_tables():
 create_user_sql = """
 INSERT INTO Users(uname, password) VALUES (%s, %s)
 """
-
-class LoginParams(BaseModel):
-    username: str
-    password: str
-
 @app.post("/create_user")
 async def create_user(username: str = Body(), password: str = Body()):
     # body = await request.json()
 
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
-
     cnx = get_db_connection()
+
     try:
         cursor = cnx.cursor()
-        cursor.execute(create_user_sql, (username, hash))
+        cursor.callproc('CreateUser', (username, hash))
+        cnx.commit()
     except Exception as e:
         cnx.rollback()
-        print(e.with_traceback())
+        print(e)
     finally:
-        cnx.commit()
         cnx.close()
 
-auth_user_sql = """ 
-SELECT * FROM Users U WHERE U.uname = %s AND U.password = %s
-"""
+
 @app.post("/auth_user")
-async def auth_user(username: str = Body(), password: str = Body()) -> bool:
+async def create_user(username: str, password: str) -> bool:
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    cnx = get_db_connection()
 
     try:
-        cnx = get_db_connection()
         cursor = cnx.cursor()
-        cursor.execute(auth_user_sql, (username, hash))
-        ret = cursor.fetchall()
-
-        if ret:
-            user_data = {}
-            user_data["uid"] = ret[0][0]
-            return JSONResponse(content=user_data)
-        else:
-            return JSONResponse(content=False)
+        result = 0
+        cursor.callproc('AuthenticateUser', (username, hash, result))
+        cursor.execute('SELECT @result;')
+        result = cursor.fetchone()
+        return result[0] > 0
     except Exception as e:
-        print(f"Error authenticating user: {e}")
-        # raise HTTPException(status_code=500, detail="Internal server error")
+        print(e)
+        return False
     finally:
-        if cnx:
-            cnx.close()
+        cnx.close()
 
 
 @app.get("/get_users")
@@ -179,83 +168,68 @@ async def get_users():
     return ret
 
 
-create_task_type_by_user_sql = """ 
-INSERT INTO Task_types(uid, name) VALUES (%s, %s)
-"""
-
 @app.post("/create_task_type_by_user")
 async def create_task_type_by_user(uid: int = Body(), name: str = Body()):
     cnx = get_db_connection()
 
     try:
         cursor = cnx.cursor()
-        cursor.execute(create_task_type_by_user_sql, (uid, name))
+        cursor.callproc('CreateTaskTypeByUser', (uid, name))
+        cnx.commit()
     except Exception as e:
         cnx.rollback()
-        print(e.with_traceback())
+        print(e)
     finally:
-        cnx.commit()
         cnx.close()
+
 
 @app.get("/get_task_type_by_user")
 async def get_task_type_by_user(uid: int):
     cnx = get_db_connection()
 
-    cursor = cnx.cursor()
-    cursor.execute("SELECT * FROM Task_types tt WHERE tt.uid = %s", (uid,))
-    ret = cursor.fetchall()
+    try:
+        cursor = cnx.cursor()
+        cursor.callproc('GetTaskTypesByUser', (uid))
+        result = cursor.fetchall()
+        return result
+    finally:
+        cnx.close()
 
-    cnx.commit()
-    cnx.close()
-
-    return ret
-
-create_task_by_user_sql = """ 
-INSERT INTO Tasks(uid, task_name, task_type, status, day_of_week) VALUES (%s, %s, %s, %s, %s)
 """
+ 	uid INT,
+	task_name TEXT,
+	task_type INT,
+	status INT,
+	start DATETIME,
+	end DATETIME,
+	"""
 
-'''
-tid INT PRIMARY KEY AUTO_INCREMENT,
-uid INT,
-task_name TEXT,
-task_type INT,
-status INT,
-day_of_week INT CHECK(day_of_week >= 0 AND day_of_week <= 6),
-FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE,
-FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
-'''
 
 @app.post("/create_task_by_user")
 async def create_task_by_user(uid: int = Body(), task_name: str = Body(), task_type: int = Body(), status: int = Body(), day_of_week: int = Body()):
     cnx = get_db_connection()
     try:
         cursor = cnx.cursor()
-        cursor.execute(create_task_by_user_sql, (uid, task_name, task_type, status, day_of_week))
+        cursor.callproc(
+            'CreateTaskByUser',
+            (uid, task_name, task_type, status, start_datetime, end_datetime)
+        )
+        cnx.commit()
     except Exception as e:
         cnx.rollback()
-        print(e.with_traceback())
+        print(e)
     finally:
-        cnx.commit()
         cnx.close()
 
-
-get_tasks_by_user_sql = """ 
-SELECT T.task_name, Tt.name, T.status, T.day_of_week FROM 
-Tasks T 
-LEFT JOIN
-Task_types Tt
-ON T.task_type = Tt.ttid
-WHERE T.uid = %s
-"""
 
 @app.get("/get_tasks_by_user")
 async def get_tasks_by_user(uid: int):
     cnx = get_db_connection()
-    cursor = cnx.cursor()
-    cursor.execute(get_tasks_by_user_sql, (uid,))
-    ret = cursor.fetchall()
 
-    cnx.commit()
-    cnx.close()
-
-    return ret
+    try:
+        cursor = cnx.cursor()
+        cursor.callproc('GetTasksByUser', (uid,))
+        result = cursor.fetchall()
+        return result
+    finally:
+        cnx.close()
