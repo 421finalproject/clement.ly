@@ -1,4 +1,4 @@
-import {HomeView} from "./home-view.js";
+import {HomeView} from "./home_view.js";
 
 let view = new HomeView();
 

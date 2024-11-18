@@ -40,8 +40,10 @@ document.getElementById('login-form')?.addEventListener('submit', async (event) 
         password: document.getElementById('login-password').value.trim(),
     };
 
+    console.log(form_data)
+
     try {
-        const response = await fetch('0.0.0.0:8000/auth_user', {
+        const response = await fetch('http://0.0.0.0:8000/auth_user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,7 +52,9 @@ document.getElementById('login-form')?.addEventListener('submit', async (event) 
         });
 
         const data = await response.json();
-        if (data.length > 0) {
+        console.log(data)
+        if (data != false) {
+            sessionStorage.setItem("uid", data.uid)
             alert('Login successful!');
             window.location.href = 'home.html'; // redirect to home page
         } else {
@@ -68,15 +72,20 @@ document.getElementById('add-task-form')?.addEventListener('submit', async (even
 
     // collecting data (/create_task_by_use)
     const form_data = {
+        uid: sessionStorage.getItem("uid"),
         task_name: document.getElementById('task-name').value,
+        // task_type: 1,
         task_type: document.getElementById('task-type').value,
-        start_time: document.getElementById('start-time').value,
-        end_time: document.getElementById('end-time').value,
+        status: 0,
+        day_of_week: document.getElementById("day-of-week").value
+        // task_type: document.getElementById('task-type').value,
+        // start_time: document.getElementById('start-time').value,
+        // end_time: document.getElementById('end-time').value,
     };
 
     try {
         // send POST request to create task
-        const response = await fetch('0.0.0.0:8000/create_task_by_user', {
+        const response = await fetch('http://0.0.0.0:8000/create_task_by_user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,7 +96,7 @@ document.getElementById('add-task-form')?.addEventListener('submit', async (even
         if (response.ok) {
             alert('Task created successfully!');
             window.location.href = 'home.html'; // redirect to home page
-            window.location.reload();  // reload page
+            // window.location.reload();  // reload page
         } else {
             const error_data = await response.json();
             alert('Error: ' + (error_data.message || 'Failed to create task'));

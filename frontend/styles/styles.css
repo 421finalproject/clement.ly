@@ -146,6 +146,24 @@ img {
     font-size: var(--font-small);
 }
 
+.select-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.select-field label {
+    margin-bottom: 5px;
+    font-size: var(--font-small);
+    font-weight: bold;
+}
+
+.select-field select {
+    padding: 10px;
+    border: 2px solid var(--brown);
+    border-radius: 15px;
+    font-size: var(--font-small);
+}
+
 .signup-form p {
     text-align: center;
     font-size: 0.9rem;

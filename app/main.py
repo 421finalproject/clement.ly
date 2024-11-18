@@ -4,6 +4,7 @@ import os
 import hashlib
 import datetime
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from fastapi import Body
 from pydantic import BaseModel, Field
 
@@ -145,14 +146,24 @@ SELECT * FROM Users U WHERE U.uname = %s AND U.password = %s
 async def auth_user(username: str = Body(), password: str = Body()) -> bool:
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    cnx = get_db_connection()
-    cursor = cnx.cursor()
-    cursor.execute(auth_user_sql, (username, hash))
-    ret = cursor.fetchall()
+    try:
+        cnx = get_db_connection()
+        cursor = cnx.cursor()
+        cursor.execute(auth_user_sql, (username, hash))
+        ret = cursor.fetchall()
 
-    cnx.close()
-
-    return ret
+        if ret:
+            user_data = {}
+            user_data["uid"] = ret[0][0]
+            return JSONResponse(content=user_data)
+        else:
+            return JSONResponse(content=False)
+    except Exception as e:
+        print(f"Error authenticating user: {e}")
+        # raise HTTPException(status_code=500, detail="Internal server error")
+    finally:
+        if cnx:
+            cnx.close()
 
 
 @app.get("/get_users")
