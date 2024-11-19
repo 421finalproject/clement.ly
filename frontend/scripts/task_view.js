@@ -32,6 +32,8 @@ export class TaskView {
         task_name_input.required = true;
         task_name_div.append(task_name_input);
 
+
+        // getting task types
         const user_id = sessionStorage.getItem("uid");
         let task_types = [];
 
@@ -43,7 +45,6 @@ export class TaskView {
                 }
             });
             if (response.ok) {
-                // let task_type_json = await response.json();
                 task_types = await response.json();
                 console.log(task_types);
             } else {

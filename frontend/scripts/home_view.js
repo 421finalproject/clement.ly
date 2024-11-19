@@ -1,5 +1,5 @@
 export class HomeView {
-    render(render_div) {
+    async render(render_div) {
         let body = document.body;
 
         // <div class="calendar">
@@ -21,32 +21,111 @@ export class HomeView {
 
         let day_names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+
+        // getting tasks
+        const user_id = sessionStorage.getItem("uid");
+        let tasks = [];
+
+        try {
+            const response = await fetch(`http://0.0.0.0:8000/get_tasks_by_user?uid=${user_id}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (response.ok) {
+                tasks = await response.json();
+                console.log(tasks);
+            } else {
+                console.log(response);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        let tasks_by_day = [
+            [],  // Sunday
+            [],  // Monday
+            [],  // Tuesday
+            [],  // Wednesday
+            [],  // Thursday
+            [],  // Friday
+            [],  // Saturday
+        ]
+
+        for (let i=0; i < tasks.length; i++) {
+            let task_day = tasks[i][3]
+            tasks_by_day[task_day].push(tasks[i])
+        }
+
         for (let i=0; i < 7; i++) {
+            // day div
             let day_div = document.createElement('div');
             day_div.classList.add('day');
 
+            // day label
             let day_name = document.createElement('p');
             day_name.innerHTML = day_names[i]
             day_div.append(day_name)
 
+            console.log(day_names[i])
+
+            // add button
             let task_link = document.createElement('a');
             task_link.href = "task.html"
-
             let button = document.createElement('button');
             button.classList.add('add-icon')
-
             let button_img = document.createElement('img');
             button_img.src = "assets/unripe.png"
             button_img.alt = "Add Task"
             button.append(button_img)
-
             task_link.append(button)
 
-            day_div.append(task_link)
+            // tasks
+            for (let j=0; j < tasks_by_day[i].length; j++) {
+                let task_div = document.createElement('div');
+                task_div.classList.add('task');
 
+                // task name
+                let task_name = document.createElement('p');
+                task_name.innerHTML = tasks_by_day[i][j][0]
+
+                // button div
+
+                // delete button
+                let delete_button = document.createElement('button');
+                delete_button.classList.add('delete-icon')
+                let delete_button_img = document.createElement('img');
+                delete_button_img.src = "assets/trash.png"
+                delete_button_img.alt = "Trashcan"
+                delete_button.append(delete_button_img)
+
+                // edit button
+                let edit_button = document.createElement('button');
+                edit_button.classList.add('delete-icon')
+                let edit_button_img = document.createElement('img');
+                edit_button_img.src = "assets/pen.png"
+                edit_button_img.alt = "Pen"
+                edit_button.append(edit_button_img)
+
+                // appending
+                task_div.append(task_name)
+                task_div.append(edit_button)
+                task_div.append(delete_button)
+                day_div.append(task_div)
+            }
+            day_div.append(task_link)
             body_div.append(day_div)
-            body.append(main_div)
         }
+
+        body.append(main_div)
+
+
+
+
+
+
+
 
 
 
