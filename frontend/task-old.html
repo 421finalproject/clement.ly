@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Clement.ly</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="assets/fruit.png">
+    <link href="styles/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="task-container">
+        <h1>Add Task</h1>
+        <form class="task-form" id="add-task-form" method="POST">
+            <div class="input-field">
+                <label for="task-name">Task Name</label>
+                <input type="text" id="task-name" name="task-name" required>
+            </div>
+            <div class="input-field">
+                <label for="task-type">Task Type</label>
+                <input type="text" id="task-type" name="task-type" required>
+            </div>
+            <div class="select-field">
+                <label for="day-of-week">Day of The Week</label>
+                <select name="day-of-week" id="day-of-week">
+                    <option value=0>Sunday</option>
+                    <option value=1>Monday</option>
+                    <option value=2>Tuesday</option>
+                    <option value=3>Wednesday</option>
+                    <option value=4>Thursday</option>
+                    <option value=5>Friday</option>
+                    <option value=6>Saturday</option>
+                </select>
+            </div>
+            <button type="submit">Create Task</button>
+        </form>
+    </div>
+    
+    <script src="scripts/forms.js"></script>
+</body>
+</html>
