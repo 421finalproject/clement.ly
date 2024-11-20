@@ -2,11 +2,23 @@ export class HomeView {
     async render(render_div) {
         let body = document.body;
 
+        // ------------------------------ General Layout ------------------------------
+        let overall_div = document.createElement('div');
+        overall_div.classList.add('overall');
+
         // <div class="calendar">
         let main_div = document.createElement('div');
         main_div.classList.add('calendar');
-        render_div.append(main_div);
 
+        // <div class="sidebar">
+        let secondary_div = document.createElement('div');
+        secondary_div.classList.add('sidebar');
+
+        overall_div.append(main_div, secondary_div);
+        render_div.append(overall_div)
+
+
+        // ------------------------------ Calendar Layout ------------------------------
         // <div class="calendar-header">
         let header_div = document.createElement('div');
         header_div.classList.add('calendar-header');
@@ -20,7 +32,6 @@ export class HomeView {
         
 
         let day_names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 
         // getting tasks
         const user_id = sessionStorage.getItem("uid");
@@ -122,14 +133,26 @@ export class HomeView {
             body_div.append(day_div)
         }
 
-        body.append(main_div)
+        // ------------------------------ Sidebar Layout --------------------
+        let type_link = document.createElement('a');
+        type_link.href = "task.html";
+        let type_button = document.createElement('button');
+        type_button.classList.add('sidebar_button');
+        let type_button_name = document.createElement('p');
+        type_button_name.innerHTML = `Create Task Type`;
+        type_button.append(type_button_name);
+        type_link.append(type_button);
+        secondary_div.append(type_link);
 
-
-
-
-
-
-
+        let log_out_link = document.createElement('a');
+        log_out_link.href = "log-in.html";
+        let log_out_button = document.createElement('button');
+        log_out_button.classList.add('sidebar_button');
+        let log_out_button_name = document.createElement('p');
+        log_out_button_name.innerHTML = `Log Out`;
+        log_out_button.append(log_out_button_name);
+        log_out_link.append(log_out_button);
+        secondary_div.append(log_out_link);
 
 
 
