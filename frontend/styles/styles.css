@@ -378,7 +378,7 @@ img {
 /* ------------------------------ "Types" on Sidebar ------------------------------ */
 .sidebar_button {
     font-family: "Sofia Sans", sans-serif;
-    background-color: var(--blue);
+    background-color: var(--light-orange);
     color: var(--brown);
     padding: 20px 20px;
     border: none;
