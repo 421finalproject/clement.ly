@@ -17,8 +17,6 @@ CREATE TABLE Tasks(
 	task_name TEXT,
 	task_type INT,
 	status INT,
-	start DATETIME,
-	end DATETIME,
-	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE,
-	FOREIGN KEY (task_type) REFERENCES Task_types(ttid) ON DELETE CASCADE
+	day_of_week INT CHECK(day_of_week >= 0 AND day_of_week <= 6),
+	FOREIGN KEY (uid) REFERENCES Users(uid) ON DELETE CASCADE
 );
