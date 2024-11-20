@@ -68,7 +68,11 @@ export class HomeView {
             day_name.innerHTML = day_names[i]
             day_div.append(day_name)
 
-            console.log(day_names[i])
+            let left_div = document.createElement('div');
+            left_div.classList.add('left-box');
+
+            let right_div = document.createElement('div');
+            right_div.classList.add('right-box');
 
             // add button
             let task_link = document.createElement('a');
@@ -109,9 +113,9 @@ export class HomeView {
                 edit_button.append(edit_button_img)
 
                 // appending
-                task_div.append(task_name)
-                task_div.append(edit_button)
-                task_div.append(delete_button)
+                left_div.append(task_name)
+                right_div.append(edit_button, delete_button)
+                task_div.append(left_div, right_div)
                 day_div.append(task_div)
             }
             day_div.append(task_link)
