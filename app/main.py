@@ -2,11 +2,11 @@ from fastapi import FastAPI
 from mysql import connector
 import os
 import hashlib
-import datetime
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from fastapi import Body
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from typing import Union
 
 app = FastAPI()
 
@@ -77,6 +77,15 @@ async def create_tables():
             cursor.execute(sql)
 
     cnx.commit()
+
+    with open("/code/app/sql/create_triggers.sql", "r") as f:
+        sqls = ("".join(f.readlines())).split("~")
+        for sql in sqls:
+            print(sql)
+            cursor.execute(sql)
+
+    cnx.commit()
+
     ret = cursor.fetchall()
 
     cnx.close()
@@ -97,19 +106,21 @@ async def delete_tables():
     cursor.execute("DROP PROCEDURE IF EXISTS GetTaskTypesByUser")
     cursor.execute("DROP PROCEDURE IF EXISTS CreateTaskByUser")
     cursor.execute("DROP PROCEDURE IF EXISTS GetTasksByUser")
+    cursor.execute("DROP PROCEDURE IF EXISTS DeleteTask")
+    cursor.execute("DROP PROCEDURE IF EXISTS EditTask")
+    cursor.execute("DROP PROCEDURE IF EXISTS DeleteTaskType")
+    cnx.commit()
+    cursor.execute("DROP TRIGGER IF EXISTS on_user_create")
+    cursor.execute("DROP TRIGGER IF EXISTS delete_used_task_type")
     cnx.commit()
     ret = cursor.fetchall()
 
     cnx.close()
     return {"message": f"{ret}"}
 
-create_user_sql = """
-INSERT INTO Users(uname, password) VALUES (%s, %s)
-"""
+
 @app.post("/create_user")
 async def create_user(username: str = Body(), password: str = Body()):
-    # body = await request.json()
-
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
     cnx = get_db_connection()
 
@@ -125,17 +136,25 @@ async def create_user(username: str = Body(), password: str = Body()):
 
 
 @app.post("/auth_user")
-async def create_user(username: str, password: str) -> bool:
+async def auth_user(username: str, password: str) -> bool:
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
     cnx = get_db_connection()
 
     try:
         cursor = cnx.cursor()
         result = 0
-        cursor.callproc('AuthenticateUser', (username, hash, result))
-        cursor.execute('SELECT @result;')
-        result = cursor.fetchone()
-        return result[0] > 0
+        cursor.execute('CALL AuthenticateUser(%s, %s)', (username, hash))
+        result = cursor.fetchall()
+        print(result)
+        #result = cursor.fetchall()
+
+        if result:
+          user_data = {}
+          user_data["uid"] = result[0]
+          return JSONResponse(content=user_data)
+        else:
+          return JSONResponse(content=False)
+
     except Exception as e:
         print(e)
         return False
@@ -175,22 +194,11 @@ async def create_task_type_by_user(uid: int = Body(), name: str = Body()):
 async def get_task_type_by_user(uid: int):
     cnx = get_db_connection()
 
-    try:
-        cursor = cnx.cursor()
-        cursor.callproc('GetTaskTypesByUser', (uid))
-        result = cursor.fetchall()
-        return result
-    finally:
-        cnx.close()
-
-"""
- 	uid INT,
-	task_name TEXT,
-	task_type INT,
-	status INT,
-	start DATETIME,
-	end DATETIME,
-	"""
+    cursor = cnx.cursor()
+    cursor.execute('CALL GetTaskTypesByUser(%s)', (uid,))
+    result = cursor.fetchall()
+    cnx.close()
+    return result
 
 
 @app.post("/create_task_by_user")
@@ -200,7 +208,7 @@ async def create_task_by_user(uid: int = Body(), task_name: str = Body(), task_t
         cursor = cnx.cursor()
         cursor.callproc(
             'CreateTaskByUser',
-            (uid, task_name, task_type, status, start_datetime, end_datetime)
+            (uid, task_name, task_type, status, day_of_week)
         )
         cnx.commit()
     except Exception as e:
@@ -214,10 +222,61 @@ async def create_task_by_user(uid: int = Body(), task_name: str = Body(), task_t
 async def get_tasks_by_user(uid: int):
     cnx = get_db_connection()
 
+    cursor = cnx.cursor()
+    cursor.execute('CALL GetTasksByUser(%s)', (uid,))
+    result = cursor.fetchall()
+    print(result)
+    cnx.close()
+
+    return result
+
+@app.post("/delete_task")
+async def delete_task(tid: int):
+    cnx = get_db_connection()
     try:
-        cursor = cnx.cursor()
-        cursor.callproc('GetTasksByUser', (uid,))
-        result = cursor.fetchall()
-        return result
-    finally:
-        cnx.close()
+      cursor = cnx.cursor()
+      cursor.execute('CALL DeleteTask(%s)', (tid,))
+      cnx.commit()
+    except Exception as e:
+        cnx.rollback()
+        print(e)
+    cnx.close()
+
+
+@app.post("/edit_task")
+async def edit_task(tid: int,
+                    task_name: str,
+                    task_type: Union[int, str], #URL request will have empty string if no value
+                    status: Union[int, str],
+                    day_of_week: Union[int, str]):
+    cnx = get_db_connection()
+    # set defaults (mysql connector has issue with typical default parameter
+    #   Python syntax)
+    if not task_name:
+        task_name = ''
+    if not task_type:
+        task_type = -1
+    if not status:
+        status = -1
+    if not day_of_week:
+        day_of_week = -1
+    try:
+      cursor = cnx.cursor()
+      cursor.callproc('EditTask', (tid, task_name, task_type, status, day_of_week))
+      cnx.commit()
+    except Exception as e:
+        cnx.rollback()
+        print(e)
+    cnx.close()
+
+@app.post("/delete_task_type")
+async def delete_task_type(ttid: int):
+    cnx = get_db_connection()
+    try:
+      cursor = cnx.cursor()
+      cursor.callproc('DeleteTaskType', (ttid,))
+      cnx.commit()
+    except Exception as e:
+        cnx.rollback()
+        print(e)
+    cnx.close()
