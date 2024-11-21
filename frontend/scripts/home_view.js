@@ -135,7 +135,7 @@ export class HomeView {
 
         // ------------------------------ Sidebar Layout --------------------
         let type_link = document.createElement('a');
-        type_link.href = "task.html";
+        type_link.href = "task-type.html";
         let type_button = document.createElement('button');
         type_button.classList.add('sidebar_button');
         let type_button_name = document.createElement('p');

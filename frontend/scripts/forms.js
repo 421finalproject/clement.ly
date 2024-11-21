@@ -66,6 +66,40 @@ document.getElementById('login-form')?.addEventListener('submit', async (event) 
     }
 });
 
+// add task type (POST) (/create_task_type_by_user)
+document.getElementById('add-task-type-form')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const form_data = {
+        uid: sessionStorage.getItem("uid"),
+        name: document.getElementById("task-type-name").value
+    };
+
+    console.log(form_data)
+
+    try {
+        const response = await fetch('http://0.0.0.0:8000/create_task_type_by_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(form_data),
+        });
+
+        if (response.ok) {
+            alert('Task Type created successfully!');
+            window.location.href = 'home.html'; // redirect to home page
+            // window.location.reload();  // reload page
+        } else {
+            const error_data = await response.json();
+            alert('Error: ' + (error_data.message || 'Failed to create task type'));
+        }
+    } catch (error) {
+        console.error('Post error', error);
+        alert('Creation error');
+    }
+})
+
 // add task (POST) (/create_task_by_user)
 document.getElementById('add-task-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();

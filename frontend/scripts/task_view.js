@@ -7,8 +7,8 @@ export class TaskView {
         render_div.append(main_div)
 
         let add_task_header = document.createElement("h1");
-        add_task_header.innerHTML = "Create Task"
-        main_div.append(add_task_header)
+        add_task_header.innerHTML = "Create Task";
+        main_div.append(add_task_header);
 
         let form = document.createElement("form");
         form.classList.add("task-form");
