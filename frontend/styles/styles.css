@@ -196,6 +196,17 @@ img {
 }
 
 /* ------------------------------Home Page------------------------------ */
+.title {
+    display: flex;
+    width: 95vw;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.title img {
+    height: 30px;
+}
+
 .overall {
     display: flex;
     flex-direction: row;
@@ -219,17 +230,41 @@ img {
     overflow: visible;
 }
 
+/* ------------------------------Sidebar------------------------------ */
 .sidebar {
-    background-color: var(--cream);
+    background-color: var(--blue);
     border-radius: 10px;
-    padding: 20px;
     width: 19%;
     box-sizing: border-box;
     min-height: 200px;
 }
 
+.sidebar button:hover{
+    background-color: var(--dark-orange);
+    color: var(--white);
+}
+
+.sidebar1 {
+    background-color: var(--cream);
+    border-radius: 10px;
+    max-width: 200px;
+    padding: 5px;
+}
+
+.sidebar2 {
+    max-width: 200px;
+    margin-top: 25px;
+}
+
+.sidebar2 img {
+    background-color: var(--cream);
+    border-radius: 10px;
+    width: 200px;
+}
+
 .calendar-header {
     width: 100%;
+    height: auto;
     background-color: var(--dark-orange);
     color: var(--white);
     text-align: center;
@@ -271,6 +306,14 @@ img {
     text-align: center;
     color: var(--brown);
     margin-bottom: 10px;
+}
+
+.top-box {
+    padding: 10px;
+}
+
+.bottom-box {
+    justify-content: flex-end;
 }
 
 /* Add Icon */

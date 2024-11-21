@@ -10,11 +10,24 @@ export class HomeView {
         let main_div = document.createElement('div');
         main_div.classList.add('calendar');
 
-        // <div class="sidebar">
+        // <div class="sidebar1">
         let secondary_div = document.createElement('div');
-        secondary_div.classList.add('sidebar');
+        secondary_div.classList.add('sidebar1');
 
-        overall_div.append(main_div, secondary_div);
+        // <div class="sidebar2">
+        let third_div = document.createElement('div');
+        third_div.classList.add('sidebar2');
+        let pet_img = document.createElement('img');
+        pet_img.src = "assets/pet.gif";
+        pet_img.alt = "Pet Gif";
+        third_div.append(pet_img);
+
+        let sidebar_div = document.createElement('div');
+        sidebar_div.classList.add('sidebar')
+        sidebar_div.append(secondary_div);
+        sidebar_div.append(third_div);
+
+        overall_div.append(main_div, sidebar_div);
         render_div.append(overall_div)
 
 
@@ -78,6 +91,8 @@ export class HomeView {
             let day_name = document.createElement('p');
             day_name.innerHTML = day_names[i]
             day_div.append(day_name)
+
+            // top and bottom div
 
             // add button
             let task_link = document.createElement('a');

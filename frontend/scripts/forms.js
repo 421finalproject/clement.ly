@@ -19,7 +19,7 @@ document.getElementById('signup-form')?.addEventListener('submit', async (event)
 
         if (response.ok) {
             alert('Sign-up successful!');
-            window.location.href = 'home.html'; // redirect to login page
+            window.location.href = 'log-in.html'; // redirect to login page
         } else {
             const error_data = await response.json();
             alert('Error: ' + (error_data.message || 'Failed to sign up'));
