@@ -106,9 +106,7 @@ export class HomeView {
 
                 // task name
                 let task_name = document.createElement('p');
-                task_name.innerHTML = tasks_by_day[i][j][0]
-
-                // button div
+                task_name.innerHTML = 'tasks_by_day[i][j][0]'
 
                 // delete button
                 let delete_button = document.createElement('button');
