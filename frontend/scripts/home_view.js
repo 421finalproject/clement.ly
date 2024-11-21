@@ -79,15 +79,9 @@ export class HomeView {
             day_name.innerHTML = day_names[i]
             day_div.append(day_name)
 
-            let left_div = document.createElement('div');
-            left_div.classList.add('left-box');
-
-            let right_div = document.createElement('div');
-            right_div.classList.add('right-box');
-
             // add button
             let task_link = document.createElement('a');
-            task_link.href = "task.html"
+            task_link.href = "add-task.html"
             let button = document.createElement('button');
             button.classList.add('add-icon');
             button.addEventListener('click', async () => {
@@ -101,12 +95,13 @@ export class HomeView {
 
             // tasks
             for (let j=0; j < tasks_by_day[i].length; j++) {
+
                 let task_div = document.createElement('div');
                 task_div.classList.add('task');
 
                 // task name
                 let task_name = document.createElement('p');
-                task_name.innerHTML = 'tasks_by_day[i][j][0]'
+                task_name.innerHTML = tasks_by_day[i][j][0]
 
                 // delete button
                 let delete_button = document.createElement('button');
@@ -123,6 +118,12 @@ export class HomeView {
                 edit_button_img.src = "assets/pen.png"
                 edit_button_img.alt = "Pen"
                 edit_button.append(edit_button_img)
+
+                // left and right div
+                let left_div = document.createElement('div');
+                left_div.classList.add('left-box');
+                let right_div = document.createElement('div');
+                right_div.classList.add('right-box');
 
                 // appending
                 left_div.append(task_name)
