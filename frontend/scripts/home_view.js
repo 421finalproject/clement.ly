@@ -151,6 +151,7 @@ export class HomeView {
         }
 
         // ------------------------------ Sidebar Layout --------------------
+        // create task type
         let type_link = document.createElement('a');
         type_link.href = "task-type.html";
         let type_button = document.createElement('button');
@@ -161,6 +162,19 @@ export class HomeView {
         type_link.append(type_button);
         secondary_div.append(type_link);
 
+        // filter
+        let filter_link = document.createElement('a');
+        filter_link.href = "filter-task-type.html";
+        let filter_button = document.createElement('button');
+        filter_button.classList.add('sidebar_button');
+        let filter_button_name = document.createElement('p');
+        filter_button_name.innerHTML = `Focus Mode`;
+        filter_button.append(filter_button_name);
+        filter_link.append(filter_button);
+        secondary_div.append(filter_link);
+
+
+        // log out
         let log_out_link = document.createElement('a');
         log_out_link.href = "log-in.html";
         let log_out_button = document.createElement('button');
