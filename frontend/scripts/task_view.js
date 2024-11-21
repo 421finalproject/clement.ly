@@ -95,6 +95,10 @@ export class TaskView {
         for (let i=0; i < 7; i++) {
             let day_option = document.createElement("option");
             day_option.value = i;
+            let selection_option = sessionStorage.getItem("day-of-week");
+            if (selection_option == i) {
+                day_option.selected = "selected";
+            }
             day_option.innerHTML = day_names[i];
             dow_field_dropdown.append(day_option);
         }

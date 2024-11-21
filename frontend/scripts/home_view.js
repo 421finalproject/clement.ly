@@ -89,7 +89,10 @@ export class HomeView {
             let task_link = document.createElement('a');
             task_link.href = "task.html"
             let button = document.createElement('button');
-            button.classList.add('add-icon')
+            button.classList.add('add-icon');
+            button.addEventListener('click', async () => {
+                sessionStorage.setItem("day-of-week", i);
+            });
             let button_img = document.createElement('img');
             button_img.src = "assets/unripe.png"
             button_img.alt = "Add Task"
@@ -154,4 +157,8 @@ export class HomeView {
         log_out_link.append(log_out_button);
         secondary_div.append(log_out_link);
     }
+}
+
+function setDayOfWeek(i) {
+    
 }
