@@ -50,18 +50,38 @@ export class FilterView {
         task_type_dropdown.name = "task-type";
         task_type_dropdown.id = "task-type";
         task_type_div.append(task_type_dropdown);
+        
+        let curr_filter_ttid = sessionStorage.getItem("filter ttid");
 
         for (let i=0; i < task_types.length; i++) {
             let task_type_option = document.createElement("option");
             task_type_option.value = task_types[i][0];
             task_type_option.innerHTML = task_types[i][2];
+            if (curr_filter_ttid != null && curr_filter_ttid == task_types[i][0]) {
+                task_type_option.selected = "selected";
+            }
             task_type_dropdown.append(task_type_option);
         }
 
         let submit_button = document.createElement("button");
         submit_button.type = "submit";
-        submit_button.innerHTML = "Filter";
+        submit_button.innerHTML = "Start Focus Mode";
+        submit_button.addEventListener('click', async (event) => {
+            event.preventDefault();
+            sessionStorage.setItem("filter ttid", task_type_dropdown.value);
+            window.location.href = 'home.html'; // redirect to home page
+        })
         form.append(submit_button);
+
+        let clear_button = document.createElement("button");
+        clear_button.type = "submit";
+        clear_button.innerHTML = "End Focus Mode";
+        clear_button.addEventListener('click', async (event) => {
+            event.preventDefault();
+            sessionStorage.removeItem("filter ttid");
+            window.location.href = 'home.html'; // redirect to home page
+        })
+        form.append(clear_button);
 
         body.append(main_div);
     }

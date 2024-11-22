@@ -46,6 +46,8 @@ export class HomeView {
 
         let day_names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+        let filter_ttid = sessionStorage.getItem("filter ttid");
+
         // getting tasks
         const user_id = sessionStorage.getItem("uid");
         let tasks = [];
@@ -165,7 +167,10 @@ export class HomeView {
                 // right_div.append(edit_button, delete_button)
                 right_div.append(edit_link, delete_button)
                 task_div.append(left_div, right_div)
-                day_div.append(task_div)
+
+                if (filter_ttid == null || filter_ttid == tasks_by_day[i][j][2]) {
+                    day_div.append(task_div);
+                }
             }
             day_div.append(task_link)
             body_div.append(day_div)
