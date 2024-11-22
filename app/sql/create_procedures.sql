@@ -30,7 +30,7 @@ END;
 ~
 CREATE PROCEDURE GetTasksByUser(IN uid INT)
 BEGIN
-    SELECT T.task_name, Tt.name, T.status, T.day_of_week
+    SELECT T.tid, T.task_name, Tt.ttid, Tt.name, T.status, T.day_of_week
     FROM Tasks T
     LEFT JOIN Task_types Tt ON T.task_type = Tt.ttid
     WHERE T.uid = uid;

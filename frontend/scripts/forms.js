@@ -142,21 +142,58 @@ document.getElementById('add-task-form')?.addEventListener('submit', async (even
 });
 
 // update task (PUT) (/update_task_by_user)
-document.getElementById('update-task-form')?.addEventListener('submit', async (event) => {
+// document.getElementById('update-task-form')?.addEventListener('submit', async (event) => {
+//     event.preventDefault();
+
+//     // collecting data
+//     const form_data = {
+//         task_name: document.getElementById('task-name').value,
+//         task_type: document.getElementById('task-type').value,
+//         start_time: document.getElementById('start-time').value,
+//         end_time: document.getElementById('end-time').value,
+//     };
+
+//     try {
+//         // send PUT request to update task
+//         const response = await fetch('0.0.0.0:8000/update_task_by_user', {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(form_data),
+//         });
+
+//         if (response.ok) {
+//             alert('Task updated successfully!');
+//             window.location.href = 'home.html'; // redirect to home page
+//             window.location.reload();  // reload page
+//         } else {
+//             const error_data = await response.json();
+//             alert('Error: ' + (error_data.message || 'Failed to update task'));
+//         }
+//     } catch (error) {
+//         console.error('PUT error', error);
+//         alert('Update error');
+//     }
+// });
+
+// update task (POST) (/update_task_by_user)
+document.getElementById('edit-task-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // collecting data
     const form_data = {
+        tid: sessionStorage.getItem("tid"),
         task_name: document.getElementById('task-name').value,
         task_type: document.getElementById('task-type').value,
-        start_time: document.getElementById('start-time').value,
-        end_time: document.getElementById('end-time').value,
+        status: document.getElementById('status').value,
+        day_of_week: document.getElementById('day-of-week').value,
     };
 
+    console.log(form_data)
+
     try {
-        // send PUT request to update task
-        const response = await fetch('0.0.0.0:8000/update_task_by_user', {
-            method: 'PUT',
+        const response = await fetch('http://0.0.0.0:8000/edit_task', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -166,13 +203,13 @@ document.getElementById('update-task-form')?.addEventListener('submit', async (e
         if (response.ok) {
             alert('Task updated successfully!');
             window.location.href = 'home.html'; // redirect to home page
-            window.location.reload();  // reload page
+            // window.location.reload();  // reload page
         } else {
             const error_data = await response.json();
             alert('Error: ' + (error_data.message || 'Failed to update task'));
         }
-    } catch (error) {
-        console.error('PUT error', error);
-        alert('Update error');
-    }
+     } catch (error) {
+            console.error('PUT error', error);
+            alert('Update error');
+        }
 });
