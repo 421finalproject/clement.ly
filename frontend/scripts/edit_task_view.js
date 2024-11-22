@@ -15,12 +15,14 @@ export class EditTaskView {
         let form = document.createElement("form");
         form.classList.add("task-form");
         form.id = "edit-task-form";
-        form.method = "PUT";
+        form.method = "POST";
         main_div.append(form);
 
         let task_name_div = document.createElement("div");
         task_name_div.classList.add("input-field");
         form.append(task_name_div);
+
+        let curr_task_name = sessionStorage.getItem("task-name");
 
         let task_name_label = document.createElement("label");
         task_name_label.for = "task-name";
@@ -32,6 +34,7 @@ export class EditTaskView {
         task_name_input.id = "task-name";
         task_name_input.name = "task-name";
         task_name_input.required = true;
+        task_name_input.value = curr_task_name;
         task_name_div.append(task_name_input);
 
 
@@ -71,11 +74,43 @@ export class EditTaskView {
         task_type_dropdown.id = "task-type";
         task_type_div.append(task_type_dropdown);
 
+        let curr_task_type = sessionStorage.getItem("ttid");
+
         for (let i=0; i < task_types.length; i++) {
             let task_type_option = document.createElement("option");
             task_type_option.value = task_types[i][0];
             task_type_option.innerHTML = task_types[i][2];
+            if (task_types[i][0] == curr_task_type) {
+                task_type_option.selected = "selected";
+            }
             task_type_dropdown.append(task_type_option);
+        }
+
+        let status_vals = ["Not Started", "In Progress", "Complete"]
+
+        let status_field_div = document.createElement("div");
+        status_field_div.classList.add("select-field");
+        form.append(status_field_div);
+
+        let status_field_label = document.createElement("label");
+        status_field_label.for = "status";
+        status_field_label.innerHTML = "Status";
+        status_field_div.append(status_field_label);
+
+        let status_field_dropdown = document.createElement("select");
+        status_field_dropdown.name = "status";
+        status_field_dropdown.id = "status";
+        status_field_div.append(status_field_dropdown);
+
+        for (let i = 0; i < 3; i++) {
+            let status_option = document.createElement("option");
+            status_option.value = i;
+            let status_val = sessionStorage.getItem("status");
+            if (status_val == i) {
+                status_option.selected = "selected";
+            }
+            status_option.innerHTML = status_vals[i];
+            status_field_dropdown.append(status_option);
         }
 
         let dow_field_div = document.createElement("div");
@@ -107,7 +142,7 @@ export class EditTaskView {
 
         let submit_button = document.createElement("button");
         submit_button.type = "submit";
-        submit_button.innerHTML = "Create Task";
+        submit_button.innerHTML = "Edit Task";
         form.append(submit_button);
 
         let script = document.createElement("script");
