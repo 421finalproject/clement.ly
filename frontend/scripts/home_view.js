@@ -78,8 +78,8 @@ export class HomeView {
         ]
 
         for (let i=0; i < tasks.length; i++) {
-            let task_day = tasks[i][3]
-            tasks_by_day[task_day].push(tasks[i])
+            let task_day = tasks[i][5];
+            tasks_by_day[task_day].push(tasks[i]);
         }
 
         for (let i=0; i < 7; i++) {
@@ -116,7 +116,7 @@ export class HomeView {
 
                 // task name
                 let task_name = document.createElement('p');
-                task_name.innerHTML = tasks_by_day[i][j][0]
+                task_name.innerHTML = tasks_by_day[i][j][1]
 
                 // delete button
                 let delete_button = document.createElement('button');
@@ -127,12 +127,23 @@ export class HomeView {
                 delete_button.append(delete_button_img)
 
                 // edit button
+                let edit_link = document.createElement('a');
+                edit_link.href = "edit-task.html";
                 let edit_button = document.createElement('button');
                 edit_button.classList.add('delete-icon')
+                edit_button.addEventListener('click', async () => {
+                    sessionStorage.setItem("tid", tasks_by_day[i][j][0]);
+                    sessionStorage.setItem("task-name", tasks_by_day[i][j][1]);
+                    sessionStorage.setItem("ttid", tasks_by_day[i][j][2]);
+                    sessionStorage.setItem("status", tasks_by_day[i][j][4]);
+                    sessionStorage.setItem("day-of-week", tasks_by_day[i][j][5]);
+                });
+
                 let edit_button_img = document.createElement('img');
                 edit_button_img.src = "assets/pen.png"
                 edit_button_img.alt = "Pen"
                 edit_button.append(edit_button_img)
+                edit_link.append(edit_button);
 
                 // left and right div
                 let left_div = document.createElement('div');
@@ -142,7 +153,8 @@ export class HomeView {
 
                 // appending
                 left_div.append(task_name)
-                right_div.append(edit_button, delete_button)
+                // right_div.append(edit_button, delete_button)
+                right_div.append(edit_link, delete_button)
                 task_div.append(left_div, right_div)
                 day_div.append(task_div)
             }
