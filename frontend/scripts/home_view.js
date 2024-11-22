@@ -2,6 +2,10 @@ export class HomeView {
     async render(render_div) {
         let body = document.body;
 
+        // Audio
+        let audio = new Audio('/assets/jazz-music.mp3');
+        audio.play();
+
         // ------------------------------ General Layout ------------------------------
         let overall_div = document.createElement('div');
         overall_div.classList.add('overall');
@@ -119,6 +123,15 @@ export class HomeView {
                 // task name
                 let task_name = document.createElement('p');
                 task_name.innerHTML = tasks_by_day[i][j][1]
+
+                let status = tasks_by_day[i][j][4];
+                if (status == 0) {
+                    task_div.classList.add("not-started");
+                } else if (status == 1) {
+                    task_div.classList.add("in-progress");
+                } else if (status == 2) {
+                    task_div.classList.add("complete");
+                }
 
                 // delete button
                 let delete_button = document.createElement('button');

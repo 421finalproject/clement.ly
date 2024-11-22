@@ -30,10 +30,24 @@ body {
     --light-orange: #E7A23A;
     --green: #91B287;
     --blue: #ACC7DE;
+    --font-xsmall: 0.5rem;
     --font-small: 0.8rem;
     --font-medium: 1rem;
     --font-large: 1.5rem;
     --font-xlarge: 2rem;
+    --task-background: #EEAB87;
+}
+
+.not-started {
+    --task-background: #EEAB87;
+}
+
+.in-progress {
+    --task-background: #F2CF99;
+}
+
+.complete {
+    --task-background: #C7D7BF;
 }
 
 /* Texts */
@@ -105,7 +119,7 @@ img {
     animation: bounce 0.5s ease-in-out;
 }
 
-/* ------------------------------Sign Up / Log In ------------------------------ */
+/* ------------------------------ Sign Up / Log In ------------------------------ */
 .signup-container {
     background-color: var(--white);
     padding: 40px;
@@ -195,7 +209,7 @@ img {
     color: var(--white);
 }
 
-/* ------------------------------Home Page------------------------------ */
+/* ------------------------------ Home Page ------------------------------ */
 .title {
     display: flex;
     width: 95vw;
@@ -217,20 +231,7 @@ img {
     margin: 0 auto;
 }
 
-.calendar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: var(--cream);
-    border-radius: 10px;
-    padding: 20px;
-    width: 100%;
-    max-width: 2000px;
-    box-sizing: border-box;
-    overflow: visible;
-}
-
-/* ------------------------------Sidebar------------------------------ */
+/* ------------------------------ Sidebar ------------------------------ */
 .sidebar {
     background-color: var(--blue);
     border-radius: 10px;
@@ -262,6 +263,31 @@ img {
     width: 200px;
 }
 
+.sidebar_button {
+    font-family: "Sofia Sans", sans-serif;
+    background-color: var(--light-orange);
+    color: var(--brown);
+    padding: 20px 20px;
+    border: none;
+    border-radius: 10px; 
+    font-size: var(--font-small);
+    margin: 10px;
+}
+
+/* ------------------------------ Calendar ------------------------------ */
+.calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--cream);
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 2000px;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
 .calendar-header {
     width: 100%;
     height: auto;
@@ -286,13 +312,13 @@ img {
     box-sizing: border-box;
 }
 
-/* Day Container */
+/* ------------------------------ Day Column ------------------------------ */
 .day {
     background-color: var(--white);
     border-radius: 10px;
     padding: 10px;
     height: 100%;
-    width: 12.5%;
+    width: 13%;
     min-height: 400px;
     display: flex;
     flex-direction: column;
@@ -306,14 +332,6 @@ img {
     text-align: center;
     color: var(--brown);
     margin-bottom: 10px;
-}
-
-.top-box {
-    padding: 10px;
-}
-
-.bottom-box {
-    justify-content: flex-end;
 }
 
 /* Add Icon */
@@ -376,9 +394,9 @@ img {
 
 /* ------------------------------ Tasks on Cal ------------------------------ */
 .task {
-    background: var(--white);
+    background: var(--task-background);
     color: var(--brown);
-    border: 2px solid var(--brown);
+    border: 1.5px solid var(--brown);
     border-radius: 20px;
     padding: 5px 10px;
     display: flex;
@@ -390,7 +408,7 @@ img {
 }
 
 .left-box {
-    font-size: var(--font-small);
+    font-size: var(--font-xsmall);
     text-align: left;
     padding-left: 2px;
     padding-top: 10px;
@@ -418,18 +436,6 @@ img {
 .right-box img {
     height: 1.5vh;
     display: block;
-}
-
-/* ------------------------------ "Types" on Sidebar ------------------------------ */
-.sidebar_button {
-    font-family: "Sofia Sans", sans-serif;
-    background-color: var(--light-orange);
-    color: var(--brown);
-    padding: 20px 20px;
-    border: none;
-    border-radius: 10px; 
-    font-size: var(--font-small);
-    margin: 10px;
 }
 
 /* ------------------------------ Responsive ------------------------------ */
