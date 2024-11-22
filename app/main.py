@@ -31,8 +31,8 @@ async def say_hello(name: str):
 
 def get_db_connection():
     database = os.environ.get('MYSQL_DATABASE')
-    user = os.environ.get('MYSQL_USER')
-    password = os.environ.get('MYSQL_PASSWORD')
+    user = "root"
+    password = os.environ.get('MYSQL_ROOT_PASSWORD')
 
     # print(database, user, password)
 
@@ -136,7 +136,7 @@ async def create_user(username: str = Body(), password: str = Body()):
 
 
 @app.post("/auth_user")
-async def auth_user(username: str, password: str) -> bool:
+async def auth_user(username: str =  Body(), password: str = Body()) -> bool:
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
     cnx = get_db_connection()
 
@@ -231,7 +231,7 @@ async def get_tasks_by_user(uid: int):
     return result
 
 @app.post("/delete_task")
-async def delete_task(tid: int):
+async def delete_task(tid: int = Body()):
     cnx = get_db_connection()
     try:
       cursor = cnx.cursor()
@@ -244,11 +244,11 @@ async def delete_task(tid: int):
 
 
 @app.post("/edit_task")
-async def edit_task(tid: int,
-                    task_name: str,
-                    task_type: Union[int, str], #URL request will have empty string if no value
-                    status: Union[int, str],
-                    day_of_week: Union[int, str]):
+async def edit_task(tid: int = Body(),
+                    task_name: str = Body(),
+                    task_type: Union[int, str] = Body(), #URL request will have empty string if no value
+                    status: Union[int, str] = Body(),
+                    day_of_week: Union[int, str] = Body()):
     cnx = get_db_connection()
     # set defaults (mysql connector has issue with typical default parameter
     #   Python syntax)
@@ -270,7 +270,7 @@ async def edit_task(tid: int,
     cnx.close()
 
 @app.post("/delete_task_type")
-async def delete_task_type(ttid: int):
+async def delete_task_type(ttid: int = Body()):
     cnx = get_db_connection()
     try:
       cursor = cnx.cursor()
