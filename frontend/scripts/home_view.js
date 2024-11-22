@@ -126,6 +126,15 @@ export class HomeView {
                 delete_button_img.alt = "Trashcan"
                 delete_button.append(delete_button_img)
 
+                delete_button.addEventListener('click', async (event) => {
+                    await fetch('http://0.0.0.0:8000/delete_task', {
+                        method: 'POST',
+                        body: tasks_by_day[i][j][0],
+                        headers: {'Content-Type': 'application/json'}
+                    });
+                    window.location.href = 'home.html'; // redirect to login page
+                });
+
                 // edit button
                 let edit_link = document.createElement('a');
                 edit_link.href = "edit-task.html";
@@ -197,8 +206,4 @@ export class HomeView {
         log_out_link.append(log_out_button);
         secondary_div.append(log_out_link);
     }
-}
-
-function setDayOfWeek(i) {
-    
 }
