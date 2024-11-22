@@ -1,11 +1,7 @@
 export class HomeView {
     async render(render_div) {
         let body = document.body;
-
-        // Audio
-        let audio = new Audio('/assets/jazz-music.mp3');
-        audio.play();
-
+        
         // ------------------------------ General Layout ------------------------------
         let overall_div = document.createElement('div');
         overall_div.classList.add('overall');
