@@ -338,7 +338,6 @@ img {
 .add-icon {
     background: none;
     border: none;
-    cursor: pointer;
     border-radius: 50%;
     padding: 10px;
     transition: transform 0.3s ease;
@@ -383,7 +382,7 @@ img {
     border: none;
     border-radius: 10px; 
     font-size: var(--font-medium);
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .task-container button:hover {
@@ -422,6 +421,7 @@ img {
     display: flex;
     gap: 5px;
     padding-right: 2px;
+    padding-left: 5px;
 }
 
 .right-box button {
@@ -437,6 +437,43 @@ img {
     height: 1.5vh;
     display: block;
 }
+
+/* ------------------------------ Responsive ------------------------------ */
+.pom-timer {
+    background-color: var(--cream);
+    border-radius: 10px;
+    padding: 34px;
+    text-align: center;
+    font-size: var(--font-medium);
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.timer-display {
+    font-size: var(--font-large);
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: var(--brown);
+}
+
+.timer-button {
+    font-family: "Sofia Sans", sans-serif;
+    background-color: var(--light-orange);
+    color: var(--brown);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: var(--font-medium);
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+.timer-button:hover {
+    background-color: var(--dark-orange);
+    color: var(--white);
+}
+
 
 /* ------------------------------ Responsive ------------------------------ */
 @media (max-width: 768px) {

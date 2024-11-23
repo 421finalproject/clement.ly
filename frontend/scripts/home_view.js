@@ -11,8 +11,8 @@ export class HomeView {
         main_div.classList.add('calendar');
 
         // <div class="sidebar1">
-        let secondary_div = document.createElement('div');
-        secondary_div.classList.add('sidebar1');
+        let second_div = document.createElement('div');
+        second_div.classList.add('sidebar1');
 
         // <div class="sidebar2">
         let third_div = document.createElement('div');
@@ -22,9 +22,57 @@ export class HomeView {
         pet_img.alt = "Pet Gif";
         third_div.append(pet_img);
 
+        // <div class="sidebar2">
+        let pom_div = document.createElement('div');
+        pom_div.classList.add('pom-timer');
+        pom_div.innerHTML = `
+            <div class="timer-display">
+                <span id="minutes">25</span>:<span id="seconds">00</span>
+            </div>
+            <button id="start-button" class="timer-button">Start</button>
+            <button id="stop-button" class="timer-button">Stop</button>
+        `;
+        third_div.append(pom_div);
+
+        // ------------------------------ Pomodoro Stuff ------------------------------
+        let timerInterval;
+        let pom_session = false;
+        pom_div.querySelector('#start-button').addEventListener('click', () => {
+            if (!pom_session) {
+                pom_session = true;
+                let minutes = parseInt(pom_div.querySelector('#minutes').textContent);
+                let seconds = parseInt(pom_div.querySelector('#seconds').textContent);
+
+                timerInterval = setInterval(() => {
+                    if (seconds === 0) {
+                        if (minutes === 0) {
+                            clearInterval(timerInterval);
+                            alert("Pomodoro complete!");
+                            pom_session = false;
+                            return;
+                        }
+                        minutes -= 1;
+                        seconds = 59;
+                    } else {
+                        seconds -= 1;
+                    }
+
+                    // Update the display
+                    pom_div.querySelector('#minutes').textContent = minutes.toString().padStart(2, '0');
+                    pom_div.querySelector('#seconds').textContent = seconds.toString().padStart(2, '0');
+                }, 1000);
+            }
+        });
+
+        pom_div.querySelector('#stop-button').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            pom_session = false;
+        });
+
+        // ------------------------------ Calendar Layout (again) ------------------------------
         let sidebar_div = document.createElement('div');
         sidebar_div.classList.add('sidebar')
-        sidebar_div.append(secondary_div);
+        sidebar_div.append(second_div);
         sidebar_div.append(third_div);
 
         overall_div.append(main_div, sidebar_div);
@@ -195,7 +243,7 @@ export class HomeView {
         type_button_name.innerHTML = `Create Task Type`;
         type_button.append(type_button_name);
         type_link.append(type_button);
-        secondary_div.append(type_link);
+        second_div.append(type_link);
 
         // filter
         let filter_link = document.createElement('a');
@@ -206,7 +254,7 @@ export class HomeView {
         filter_button_name.innerHTML = `Focus Mode`;
         filter_button.append(filter_button_name);
         filter_link.append(filter_button);
-        secondary_div.append(filter_link);
+        second_div.append(filter_link);
 
 
         // log out
@@ -218,6 +266,6 @@ export class HomeView {
         log_out_button_name.innerHTML = `Log Out`;
         log_out_button.append(log_out_button_name);
         log_out_link.append(log_out_button);
-        secondary_div.append(log_out_link);
+        second_div.append(log_out_link);
     }
 }
