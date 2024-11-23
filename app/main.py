@@ -4,7 +4,7 @@ import os
 import hashlib
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Body
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
 from typing import Union
 
@@ -127,9 +127,13 @@ async def create_user(username: str = Body(), password: str = Body()):
     # password hashing stuff
     hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
     cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute("SELECT * FROM Users U WHERE U.uname = %s", (username,))  # calling stored procedure
+    ret = cursor.fetchall()
+    if ret:
+        return Response(status_code=400)
 
     try:
-        cursor = cnx.cursor()
         cursor.callproc('CreateUser', (username, hash))
         cnx.commit()
     except Exception as e:
